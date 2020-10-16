@@ -32,7 +32,15 @@
               <tbody>
                 <?php
                 $i = 1;
-                $users = query("SELECT * FROM users");
+
+                // Pagination
+                $jumlahDataPerHalaman = 10;
+                $jumlahData = count(query("SELECT * FROM users"));
+                $jumlahHalaman = ceil($jumlahData / $jumlahDataPerHalaman);
+                $halamanAktif = (isset($_GET['halaman'])) ? $_GET['halaman'] : 1;
+                $awalData = ($jumlahDataPerHalaman * $halamanAktif) - $jumlahDataPerHalaman;
+
+                $users = query("SELECT * FROM users LIMIT $awalData, $jumlahDataPerHalaman");
                 foreach ($users as $row) : ?>
                   <tr>
                     <td><?= $i; ?></td>
@@ -49,6 +57,33 @@
                 endforeach; ?>
               </tbody>
             </table>
+
+            <nav aria-label="Page navigation example" class="mt-4">
+              <ul class="pagination justify-content-center">
+
+                <?php if ($halamanAktif > 1) : ?>
+                  <li class="page-item"><a class="page-link" href="index.php?page=view_employee&halaman=<?= $halamanAktif - 1; ?>">Previous</a></li>
+                <?php else : ?>
+                  <li class="page-item disabled"><a class="page-link" href="index.php?page=view_employee&halaman=<?= $halamanAktif - 1; ?>">Previous</a></li>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $jumlahHalaman; $i++) : ?>
+                  <?php if ($i == $halamanAktif) : ?>
+                    <li class="page-item active"><a class="page-link" href="index.php?page=view_employee&halaman=<?= $i; ?>" class="active"><?= $i; ?></a></li>
+                  <?php else : ?>
+                    <li class="page-item"><a class="page-link" href="index.php?page=view_employee&halaman=<?= $i; ?>"><?= $i; ?></a></li>
+                  <?php endif; ?>
+                <?php endfor; ?>
+
+                <?php if ($halamanAktif < $jumlahHalaman) : ?>
+                  <li class="page-item"><a class="page-link" href="index.php?page=view_employee&halaman=<?= $halamanAktif + 1; ?>">Next</a></li>
+                <?php else : ?>
+                  <li class="page-item disabled"><a class="page-link" href="index.php?page=view_employee&halaman=<?= $halamanAktif + 1; ?>">Next</a></li>
+                <?php endif; ?>
+
+              </ul>
+            </nav>
+
           </div>
           <!-- /.card-body -->
         </div>

@@ -22,10 +22,6 @@ if (isset($_GET['page'])) {
       include 'pages/employees/delete_employee.php';
       break;
 
-    case 'print';
-      include 'pages/reports/print.php';
-      break;
-
 
     case 'view_user':
       include 'pages/users/view_user.php';
